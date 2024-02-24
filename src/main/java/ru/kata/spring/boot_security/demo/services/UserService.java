@@ -11,5 +11,6 @@ public interface UserService {
     void update(int id, User updateUser, String[] rolesNames);
     User find(int id);
     User find(String name);
+    User findEmail(String email);
 
 }

@@ -18,12 +18,6 @@ public class RoleDaoImpl implements RoleDao {
         entityManager.persist(role);
     }
 
-
-    @Override
-    public Role find(int id) {
-        return null;
-    }
-
     @Override
     public Role find(String role) {
         TypedQuery<Role> query = entityManager.createQuery("SELECT r FROM Role r WHERE r.role = :role", Role.class);

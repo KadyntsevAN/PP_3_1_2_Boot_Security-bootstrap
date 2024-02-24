@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Transactional(readOnly = true)
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
@@ -38,7 +39,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setPass(bCryptPasswordEncoder.encode(user.getPassword()));
         setUserRoles(user, rolesNames);
         userDao.save(user);
-
     }
 
     @Override
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Transactional
     @Override
-    public void update(int id, User updateUser,String[] rolesNames) {
+    public void update(int id, User updateUser, String[] rolesNames) {
         User currentUser = userDao.find(id);
         setUserRoles(updateUser, rolesNames);
         updateUser.setPass(currentUser.getPass());
@@ -85,11 +85,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-        User user = userDao.find(name);
+    public User findEmail(String email) {
+        return userDao.findEmail(email);
+    }
+
+    @Transactional
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userDao.findEmail(email);
         if (user == null) {
-            throw new UsernameNotFoundException(String.format("User %s not found :", name));
+            throw new UsernameNotFoundException(String.format("User %s not found :", email));
         }
-        return user;
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
+                user.getRoles());
     }
 }

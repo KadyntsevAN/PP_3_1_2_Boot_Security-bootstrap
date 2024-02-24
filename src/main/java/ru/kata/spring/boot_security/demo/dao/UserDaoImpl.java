@@ -55,4 +55,15 @@ public class UserDaoImpl implements UserDao {
             return null;
         }
     }
+
+    @Override
+    public User findEmail(String email) {
+        TypedQuery<User> query = entityManager.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class);
+        query.setParameter("email", email);
+        try {
+            return query.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

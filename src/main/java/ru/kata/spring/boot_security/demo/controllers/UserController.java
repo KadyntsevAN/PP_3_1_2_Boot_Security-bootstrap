@@ -12,9 +12,16 @@ import ru.kata.spring.boot_security.demo.services.UserService;
 @RequestMapping("/user")
 public class UserController {
 
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     @GetMapping("")
     public String profile(Model model) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user =  userService.findEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         model.addAttribute("user", user);
         return "/user/profile";
     }
