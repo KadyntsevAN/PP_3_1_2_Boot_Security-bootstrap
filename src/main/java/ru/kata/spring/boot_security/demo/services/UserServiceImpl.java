@@ -41,6 +41,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userDao.save(user);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<User> show() {
         return userDao.show();
@@ -74,25 +75,27 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setRoles(rolesSet);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public User find(int id) {
         return userDao.find(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public User find(String name) {
         return userDao.find(name);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public User findEmail(String email) {
         return userDao.findEmail(email);
     }
 
-    @Transactional
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userDao.findEmail(email);
+        User user = userDao.joinFetch(findEmail(email));
         if (user == null) {
             throw new UsernameNotFoundException(String.format("User %s not found :", email));
         }

@@ -15,5 +15,7 @@ public interface UserDao {
     User find(String name);
     User findEmail(String email);
 
+    User joinFetch(User user);
+
 
 }
